@@ -15,13 +15,13 @@ class StashboardClient(object):
 		pass;
 
 	def up(self, service, message=None):
-		self.post_event("up", service, message)
+		return self.post_event("up", service, message)
 	
 	def down(self, service, message=None):
-		self.post_event("down", service, message)
+		return self.post_event("down", service, message)
 		
 	def warn(self, service, message=None):
-		self.post_event("warning", service, message)
+		return self.post_event("warning", service, message)
 
 	def post_event(self, status, service, message):
 		if message is None:
@@ -31,10 +31,11 @@ class StashboardClient(object):
 		    "status": status,
 			"message": message
 		})
-		print data
-#		resp, content = self.client.request( self.base_admin_url + "/services/" + service + "/events", "POST", body=data)
-#		event = json.loads(content)
-#		print event
+		resp, content = self.client.request( self.base_admin_url + "/services/" + service + "/events", "POST", body=data)
+		event = json.loads(content)
+		if resp['status'] != '200':
+			raise Exception(event['message'])
+		return event
 		
 	def get_config(self):
 		try:
