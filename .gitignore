@@ -1,3 +1,4 @@
 .project
 .pydevproject
 stashboard.cfg
+*.pyc

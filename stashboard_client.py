@@ -3,8 +3,7 @@ import json
 import urllib
 import ConfigParser
 
-class StashboardClient:
-
+class StashboardClient(object):
 	
 	def __init__(self):
 		consumer_key, consumer_secret = self.get_consumer_keys()
@@ -16,18 +15,26 @@ class StashboardClient:
 		pass;
 
 	def up(self, service, message=None):
-		if message is None:
-			message = "up and running"
 		self.post_event("up", service, message)
+	
+	def down(self, service, message=None):
+		self.post_event("down", service, message)
 		
+	def warn(self, service, message=None):
+		self.post_event("warning", service, message)
+
 	def post_event(self, status, service, message):
+		if message is None:
+			message = self.get_default_message(status)
+
 		data = urllib.urlencode({
 		    "status": status,
 			"message": message
 		})
-		resp, content = self.client.request( self.base_admin_url + "/services/mashape/events", "POST", body=data)
-		event = json.loads(content)
-		print event
+		print data
+#		resp, content = self.client.request( self.base_admin_url + "/services/" + service + "/events", "POST", body=data)
+#		event = json.loads(content)
+#		print event
 		
 	def get_config(self):
 		try:
@@ -41,6 +48,10 @@ class StashboardClient:
 		cfg = self.get_config()
 		return cfg.get("stashboard", "base_url")
 	
+	def get_default_message(self, status):
+		cfg = self.get_config()
+		return cfg.get("stashboard", "message." + status)
+		
 	def get_consumer_keys(self):
 		cfg = self.get_config()
 		return cfg.get("stashboard", "consumer_key"), cfg.get("stashboard", "consumer_secret") 
@@ -53,7 +64,4 @@ class StashboardClient:
 	def build_client(consumer_key, consumer_secret, oauth_key, oauth_secret):
 		consumer = oauth2.Consumer(key=consumer_key, secret=consumer_secret)
 		token = oauth2.Token(oauth_key, oauth_secret)
-		return oauth2.Client(consumer, token=token)		
-
-v = StashboardClient()
-v.up("mashape")
+		return oauth2.Client(consumer, token=token)
