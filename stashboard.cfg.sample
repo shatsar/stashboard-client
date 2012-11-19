@@ -14,6 +14,6 @@ url=https://www.mashape.com
 status=200
 
 [mashape.com]
-stashboard_service=mashape_redirect
+stashboard_service=redirect
 url=https://mashape.com
 status=301
