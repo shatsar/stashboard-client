@@ -4,3 +4,16 @@ consumer_key=anonymous
 consumer_secret=anonymous
 oauth_key=
 oauth_secret=
+message.up=Up and Running
+message.warning=Something is wrong
+message.down=Issues
+
+[www.mashape.com]
+stashboard_service=mashape
+url=https://www.mashape.com
+status=200
+
+[mashape.com]
+stashboard_service=mashape_redirect
+url=https://mashape.com
+status=301
