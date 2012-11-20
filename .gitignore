@@ -2,3 +2,4 @@
 .pydevproject
 stashboard.cfg
 *.pyc
+mashape-status.py
