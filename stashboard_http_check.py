@@ -22,7 +22,7 @@ class StashboardHttpCheck(StashboardClient):
     
     def check(self):
         parsed_url = urlparse(self.url)
-        connection = httplib.HTTPSConnection(parsed_url.netloc)
+        connection = httplib.HTTPConnection(parsed_url.netloc)
         if parsed_url == "https":
             connection = httplib.HTTPSConnection(parsed_url.netloc)
         connection.request("GET", self.url, headers=self.additional_headers)
