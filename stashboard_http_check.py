@@ -1,27 +1,33 @@
 from stashboard_client import StashboardClient
 import httplib
 from urlparse import urlparse
+import ConfigParser
+import ast
 
 class StashboardHttpCheck(StashboardClient):
     
     def __init__(self, configuration_key):
         super(StashboardHttpCheck, self).__init__()
-        self.url,self.expected_status, self.service = self.load_configuration(configuration_key)
+        self.load_configuration(configuration_key)
         
     def load_configuration(self, configuration_key):
         cfg = self.get_config()
-        url = cfg.get(configuration_key, "url")
-        status = int(cfg.get(configuration_key, "status"))
-        service = cfg.get(configuration_key, "stashboard_service")
-        return url, status, service
+        self.url = cfg.get(configuration_key, "url")
+        self.expected_status = cfg.getint(configuration_key, "status")
+        self.service = cfg.get(configuration_key, "stashboard_service")
+        try:
+            self.additional_headers = ast.literal_eval(cfg.get(configuration_key, "header"))
+        except ConfigParser.NoOptionError:
+            self.additional_headers = {}
     
     def check(self):
         parsed_url = urlparse(self.url)
         connection = httplib.HTTPSConnection(parsed_url.netloc)
         if parsed_url == "https":
             connection = httplib.HTTPSConnection(parsed_url.netloc)
-        connection.request("GET", self.url)
-        status = connection.getresponse().status
+        connection.request("GET", self.url, headers=self.additional_headers)
+        response = connection.getresponse()
+        status = response.status
         if status != self.expected_status:
             self.down(self.service)
         self.up(self.service)
