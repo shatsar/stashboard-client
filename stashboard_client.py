@@ -24,6 +24,8 @@ class StashboardClient(object):
 		return self.post_event("warning", service, message)
 
 	def post_event(self, status, service, message):
+		if self.get_current_status(service) == status:
+			return None
 		if message is None:
 			message = self.get_default_message(status)
 
@@ -37,6 +39,11 @@ class StashboardClient(object):
 			raise Exception(event['message'])
 		return event
 		
+	def get_current_status(self, service):
+		resp, content = self.client.request( self.base_admin_url + "/services/" + service + "/events/current", "GET")
+		last_event = json.loads(content)
+		return last_event['status']['id']
+	
 	def get_config(self):
 		try:
 			return self.cfg
