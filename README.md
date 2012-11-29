@@ -45,7 +45,7 @@ message.down=Issues
 To test an HTTP server, the configuration section looks like this:
 
 ```
-[mashape.com]
+[section_name]
 stashboard_service=redirect
 url=https://mashape.com
 status=301
