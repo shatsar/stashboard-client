@@ -48,7 +48,7 @@ class StashboardClient(object):
 		try:
 			return self.cfg
 		except AttributeError:
-			self.cfg = ConfigParser.RawConfigParser()
+			self.cfg = ConfigParser.ConfigParser()
 			self.cfg.read("stashboard.cfg")
 			return self.cfg
 	
