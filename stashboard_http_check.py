@@ -6,7 +6,7 @@ import ast
 import time
 
 class StashboardHttpCheck(StashboardClient):
-    DEFAULT_RESPONSE_TIME_LIMIT = 30
+    DEFAULT_RESPONSE_TIME_LIMIT = 10000
     
     def __init__(self, configuration_key):
         super(StashboardHttpCheck, self).__init__()
@@ -37,8 +37,8 @@ class StashboardHttpCheck(StashboardClient):
             connection.request("GET", self.url, headers=self.additional_headers)
             start = time.time()
             response = connection.getresponse()
-            response_time_in_seconds = (time.time() - start) * 1000
-            if(response_time_in_seconds > self.response_time_limit):
+            response_time_in_ms = (time.time() - start) * 1000
+            if(response_time_in_ms > self.response_time_limit):
                 self.warn(self.service)
                 return
                 
