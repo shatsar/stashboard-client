@@ -33,14 +33,12 @@ class StashboardClient(object):
 		    "status": status,
 			"message": message
 		})
-		resp, content = self.client.request( self.base_admin_url + "/services/" + service + "/events", "POST", body=data)
-		event = json.loads(content)
-		if resp['status'] != '200':
-			raise Exception(event['message'])
-		return event
+
 		
 	def get_current_status(self, service):
 		resp, content = self.client.request( self.base_admin_url + "/services/" + service + "/events/current", "GET")
+		if resp['status'] != "200":
+			raise Exception(content)
 		last_event = json.loads(content)
 		return last_event['status']['id']
 	
